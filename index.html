@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Running Python on Browsers">
+    <meta name="author" content="Takahiro Ueda">
+    <title>PythonBox</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <style>
+      body {
+        padding-top: 5rem;
+      }
+      #editor {
+        height: 400px;
+        margin-bottom: 10px;
+      }
+      #console {
+        width: 400px;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <a class="navbar-brand" href="#">PythonBox</a>
+    </nav>
+
+    <main role="main" class="container">
+      <div id="editor"></div>
+      <button type="button" class="btn btn-secondary" id="runButton">Run</button>
+      <textarea id="console" autocomplete="off"></textarea>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js" integrity="sha384-0NsDNlp/Rj45+c3BACpEiW+X+cOg4JWZ4Hf4wQR0zcFa9AmyDBOaJ0JupRuW5SHC" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.4.0/brython.min.js" integrity="sha384-UeIi7uliN1InmWaX7SIEZlNDodmWG2HrqzS62NCROj1D1Zw8Y4qyKR9iP/z8RJPA" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.4.0/brython_stdlib.js" integrity="sha384-dyDKHiB/c8DxfziQRDGIJirF26ok5OWttw1o57r3bA4x/i8khn5dLelMIND0q9Up" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      var editor = ace.edit("editor");
+      editor.getSession().setMode("ace/mode/python");
+      editor.focus();
+
+      $(window).on("load", function() {
+        brython(1);
+      });
+    </script>
+    <script type="text/python">
+      import sys
+      import time
+      import traceback
+      from browser import document, window
+
+      class cOutput:
+        def write(self, data):
+          document['console'].value += str(data)
+        def flush(self):
+          pass
+
+      editor = window.editor
+
+      sys.stdout = cOutput()
+      sys.stderr = cOutput()
+
+      @document['runButton'].bind('click')
+      def run_python(_e):
+        src = editor.getValue()
+        document['console'].value = ''
+        t0 = time.perf_counter()
+        try:
+          ns = {'__name__':'__main__'}
+          exec(src, ns)
+        except Exception:
+          traceback.print_exc(file=sys.stderr)
+        print('<completed in %8.3f s>' % (time.perf_counter() - t0))
+    </script>
+  </body>
+</html>
