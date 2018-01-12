@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
     <link rel="stylesheet" href="editor.css">
   </head>
-  <body>
+  <body onload="brython(1)">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <a class="navbar-brand" href="#">PythonBox</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js" integrity="sha384-0NsDNlp/Rj45+c3BACpEiW+X+cOg4JWZ4Hf4wQR0zcFa9AmyDBOaJ0JupRuW5SHC" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.4.0/brython.min.js" integrity="sha384-UeIi7uliN1InmWaX7SIEZlNDodmWG2HrqzS62NCROj1D1Zw8Y4qyKR9iP/z8RJPA" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.4.0/brython_stdlib.js" integrity="sha384-dyDKHiB/c8DxfziQRDGIJirF26ok5OWttw1o57r3bA4x/i8khn5dLelMIND0q9Up" crossorigin="anonymous"></script>
-    <script src="editor.js"></script>
-    <script src="editor.py" type="text/python"></script>
+    <script src="editor.py" type="text/python" id="__run_script__"></script>
   </body>
 </html>

@@ -1,3 +1,4 @@
+"""Editor for Python programming."""
 import sys
 import time
 import traceback
@@ -5,25 +6,34 @@ import traceback
 from browser import document, window
 
 
-editor = window.editor
+editor = window.ace.edit('editor')
 console = document['console']
 run_button = document['runButton']
 
 
-class COutput:
+editor.getSession().setMode('ace/mode/python')
+editor.focus()
+
+
+class ConsoleOutput:
+    """Console output."""
+
     def write(self, data):
+        """Write the given data."""
         console.value += str(data)
 
     def flush(self):
+        """Flush the written data."""
         pass
 
 
-sys.stdout = COutput()
-sys.stderr = COutput()
+sys.stdout = ConsoleOutput()
+sys.stderr = ConsoleOutput()
 
 
 @run_button.bind('click')
 def run_python(_e):
+    """Event handler for clicking "Run" button."""
     src = editor.getValue()
     document['console'].value = ''
     t0 = time.perf_counter()
