@@ -2,10 +2,9 @@ body {
   padding-top: 5rem;
 }
 #editor {
-  height: 200pt;
+  min-height: 200pt;
   margin-bottom: 10pt;
 }
 #console {
-  width: 400pt;
-  height: 180pt;
+  min-height: 150pt;
 }
