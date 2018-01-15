@@ -2,12 +2,23 @@ body {
   padding-top: 5rem;
 }
 #editor {
-  min-height: 200pt;
+  min-height: 250pt;
   margin-bottom: 10pt;
+  font-size: 11pt;
 }
 #console {
   min-height: 150pt;
+  white-space: pre;
+  background: black;
+  color: white;
+  padding: 5pt;
 }
 #saveAsInput {
   width: 120pt;
+}
+#console .error {
+  color: red;
+}
+#console .info {
+  color: green;
 }

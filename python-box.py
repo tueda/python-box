@@ -40,17 +40,37 @@ jq(window).on('unload', on_window_unload)
 class ConsoleOutput:
     """Console output."""
 
+    def __init__(self, class_=None):
+        """Construct a console output."""
+        if class_ is None:
+            self._fmt = '{}'
+        else:
+            self._fmt = '<span class="{}">{{}}</span>'.format(class_)
+
     def write(self, data):
         """Write the given data."""
-        console.value += str(data)
+        console.html += self._fmt.format(escape(str(data)).replace('\n',
+                                                                   '<br>'))
 
     def flush(self):
         """Flush the written data."""
         pass
 
+    def clear(self):
+        """Clear the console."""
+        console.html = ''
+
+
+def escape(string):
+    """Replace special characters to HTML-safe sequences."""
+    # NOTE: somehow html.escape() didn't work.
+    return (string.replace('&', '&amp;').replace('<', '&lt;').
+            replace('>', '&gt;'))
+
 
 sys.stdout = ConsoleOutput()
-sys.stderr = ConsoleOutput()
+sys.stderr = ConsoleOutput('error')
+info_console = ConsoleOutput('info')
 
 
 # Home button
@@ -74,14 +94,15 @@ def run_python(e):
     """Event handler for clicking "Run" button."""
     src = editor.getValue()
     on_window_unload(None)  # save to storage
-    document['console'].value = ''
+    info_console.clear()
     t0 = time.perf_counter()
     try:
         ns = {'__name__': '__main__'}
         exec(src, ns)
     except Exception:
         traceback.print_exc(file=sys.stderr)
-    print('<completed in %8.3f s>' % (time.perf_counter() - t0))
+    print('Completed in %8.3f s' % (time.perf_counter() - t0),
+          file=info_console)
     e.preventDefault()
 
 
