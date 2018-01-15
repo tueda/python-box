@@ -57,7 +57,7 @@ sys.stderr = ConsoleOutput()
 # Running the script.
 
 @run_button.bind('click')
-def run_python(_e):
+def run_python(e):
     """Event handler for clicking "Run" button."""
     src = editor.getValue()
     document['console'].value = ''
@@ -68,3 +68,4 @@ def run_python(_e):
     except Exception:
         traceback.print_exc(file=sys.stderr)
     print('<completed in %8.3f s>' % (time.perf_counter() - t0))
+    e.preventDefault()
