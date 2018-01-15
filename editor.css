@@ -8,3 +8,6 @@ body {
 #console {
   min-height: 150pt;
 }
+#saveAsInput {
+  width: 120pt;
+}

@@ -53,6 +53,17 @@ sys.stdout = ConsoleOutput()
 sys.stderr = ConsoleOutput()
 
 
+# Home button
+
+home_button = document['homeButton']
+
+
+@home_button.bind('click')
+def on_home_click(e):
+    """Event handler for clicking "Home" button."""
+    e.preventDefault()
+
+
 # Running the script.
 
 run_button = document['runButton']
@@ -62,6 +73,7 @@ run_button = document['runButton']
 def run_python(e):
     """Event handler for clicking "Run" button."""
     src = editor.getValue()
+    on_window_unload(None)  # save to storage
     document['console'].value = ''
     t0 = time.perf_counter()
     try:
@@ -73,20 +85,21 @@ def run_python(e):
     e.preventDefault()
 
 
-# Load a script.
+# Loading a script.
 
 load_button = document['loadButton']
-file_input = document['fileInput']
+load_input = document['loadInput']
 
 
 @load_button.bind('click')
 def load_python(e):
     """Event handler for clicking "Load" button."""
-    file_input.click()
+    load_input.click()
     e.preventDefault()
 
 
 def handle_files(files):
+    """Handle a file list object."""
     f = files[0]
     reader = window.FileReader.new()
     reader.onload = lambda e: editor.setValue(e.target.result, -1)
@@ -94,3 +107,21 @@ def handle_files(files):
 
 
 window.handleFiles = handle_files
+
+# Saving the script.
+
+saveas_button = document['saveAsButton']
+saveas_input = document['saveAsInput']
+
+
+@saveas_button.bind('click')
+def save_python(e):
+    """Event handler for clicking "SaveAs" button."""
+    filename = saveas_input.value
+    if not filename:
+        filename = saveas_input.placeholder
+    filename += '.py'
+    blob = window.Blob.new([editor.getValue()],
+                           {type: 'text/plain;charset=utf-8'})
+    window.saveAs(blob, filename)
+    e.preventDefault()
