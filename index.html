@@ -20,6 +20,9 @@
           <li class="nav-item">
             <a class="nav-link" href="#" id="runButton">Run</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="loadButton">Load</a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -27,6 +30,7 @@
     <main role="main" class="container">
       <div class="w-100" id="editor"></div>
       <textarea class="w-100" id="console" autocomplete="off"></textarea>
+      <input type="file" id="fileInput" accept="text/python" style="display:none" onchange="handleFiles(this.files)">
     </main>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

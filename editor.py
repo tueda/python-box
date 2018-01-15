@@ -9,7 +9,6 @@ from browser import document, window
 jq = window.jQuery
 editor = window.ace.edit('editor')
 console = document['console']
-run_button = document['runButton']
 
 # Editor setting.
 
@@ -56,6 +55,9 @@ sys.stderr = ConsoleOutput()
 
 # Running the script.
 
+run_button = document['runButton']
+
+
 @run_button.bind('click')
 def run_python(e):
     """Event handler for clicking "Run" button."""
@@ -69,3 +71,26 @@ def run_python(e):
         traceback.print_exc(file=sys.stderr)
     print('<completed in %8.3f s>' % (time.perf_counter() - t0))
     e.preventDefault()
+
+
+# Load a script.
+
+load_button = document['loadButton']
+file_input = document['fileInput']
+
+
+@load_button.bind('click')
+def load_python(e):
+    """Event handler for clicking "Load" button."""
+    file_input.click()
+    e.preventDefault()
+
+
+def handle_files(files):
+    f = files[0]
+    reader = window.FileReader.new()
+    reader.onload = lambda e: editor.setValue(e.target.result, -1)
+    reader.readAsText(f)
+
+
+window.handleFiles = handle_files
