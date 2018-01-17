@@ -2,6 +2,7 @@
 import sys
 import time
 import traceback
+import turtle
 
 from browser import document, window
 
@@ -13,7 +14,30 @@ console = document['console']
 # Editor setting.
 
 editor.getSession().setMode('ace/mode/python')
+editor.setOptions({
+    'behavioursEnabled': False,
+})
 editor.focus()
+
+# Turtle graphics
+
+_turtles = set()
+
+turtle.set_defaults(
+    canvwidth=600,
+    canvheight=400,
+    turtle_canvas_wrapper=document['turtle-div']
+)
+
+_turtle_orig_goto = turtle.Turtle._goto
+
+
+def _turtle_new_goto(self, *args):
+    _turtle_orig_goto(self, *args)
+    _turtles.add(self)
+
+
+turtle.Turtle._goto = _turtle_new_goto
 
 # HTML 5 local storage
 
@@ -95,14 +119,16 @@ def run_python(e):
     src = editor.getValue()
     on_window_unload(None)  # save to storage
     info_console.clear()
+    _turtles.clear()
     t0 = time.perf_counter()
     try:
         ns = {'__name__': '__main__'}
         exec(src, ns)
+        if _turtles:
+            turtle.show()
     except Exception:
         traceback.print_exc(file=sys.stderr)
-    print('Completed in %8.3f s' % (time.perf_counter() - t0),
-          file=info_console)
+    info_console.write('Completed in %8.3f s\n' % (time.perf_counter() - t0))
     e.preventDefault()
 
 
