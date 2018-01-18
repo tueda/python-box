@@ -20,12 +20,14 @@ editor.setOptions({
 editor.focus()
 
 # Turtle graphics
+# NOTE: the following code might need to be rewritten for the next version of
+# Brython.
 
 _turtles = set()
 
 turtle.set_defaults(
-    canvwidth=600,
-    canvheight=400,
+    canvwidth=420,
+    canvheight=420,
     turtle_canvas_wrapper=document['turtle-div']
 )
 
@@ -38,6 +40,22 @@ def _turtle_new_goto(self, *args):
 
 
 turtle.Turtle._goto = _turtle_new_goto
+
+
+def clear_turtle():
+    """Clear the turtle graphics."""
+    _turtles.clear()
+    document['turtle-div'].html = ''
+    turtle.Turtle._screen = None
+    turtle._Screen._root = None
+    turtle._Screen._canvas = None
+
+
+def show_turtle():
+    """Show the turtle graphics."""
+    if _turtles:
+        turtle.Screen().end()
+
 
 # HTML 5 local storage
 
@@ -119,13 +137,12 @@ def run_python(e):
     src = editor.getValue()
     on_window_unload(None)  # save to storage
     info_console.clear()
-    _turtles.clear()
+    clear_turtle()
     t0 = time.perf_counter()
     try:
         ns = {'__name__': '__main__'}
         exec(src, ns)
-        if _turtles:
-            turtle.show()
+        show_turtle()
     except Exception:
         traceback.print_exc(file=sys.stderr)
     info_console.write('Completed in %8.3f s\n' % (time.perf_counter() - t0))
